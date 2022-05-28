@@ -1,9 +1,30 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import styles from '../styles/Home.module.css'
+import { ordered } from './src/app/features/cake'
+import { fetchUsers } from './src/app/features/users'
+import { useAppDispatch, useAppSelector } from './src/app/hooks'
 
 const Home: NextPage = () => {
+
+  const dispatch = useAppDispatch()
+
+  let { loading, error, users } = useAppSelector((state) => state.users)
+  console.log(users, error)
+
+  let cakes = useAppSelector((state) => state.cakes)
+
+  console.log('cakes', cakes)
+
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [dispatch])
+
+
+  console.log(users)
   return (
     <div className={styles.container}>
       <Head>
@@ -14,8 +35,10 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Cake - {cakes.totalCakes}
         </h1>
+
+        <button onClick={() => dispatch(ordered())}>order cake</button>
 
         <p className={styles.description}>
           Get started by editing{' '}
